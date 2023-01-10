@@ -317,15 +317,6 @@ class CornersProblem(search.SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            "*** YOUR CODE HERE ***"
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             x,y = state[0]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
@@ -376,18 +367,16 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     remaning_corners = set(corners) - set(state[1])
     curr_x, curr_y = state[0]
-    # total_cost = 0
-    # while len(remaning_corners) > 0:
-    #     distance = [ ((corner_x, corner_y),  abs(curr_x - corner_x) + abs(curr_y - corner_y))
-    #                  for corner_x, corner_y in remaning_corners ]
-    #     # distance = [ ((corner_x, corner_y),  mazeDistance((corner_x, corner_y), (curr_x, curr_y)))
-    #     #              for corner_x, corner_y in remaning_corners ]
-    #     further_corner = max(distance, key=lambda x: x[1])
-    #     total_cost = further_corner[1]
-    #     curr_x, curr_y = further_corner[0]
-    #     remaning_corners.remove(further_corner[0])
+    total_cost = 0
+    while len(remaning_corners) > 0:
+        distance = [ ((corner_x, corner_y),  abs(curr_x - corner_x) + abs(curr_y - corner_y))
+                     for corner_x, corner_y in remaning_corners ]
+        furtherest_corner = max(distance, key=lambda x: x[1])
+        total_cost = furtherest_corner[1]
+        curr_x, curr_y = furtherest_corner[0]
+        remaning_corners.remove(furtherest_corner[0])
 
-    total_cost = sum([abs(curr_x - corner_x) + abs(curr_y - corner_y) for corner_x, corner_y in remaning_corners])
+    # total_cost = sum([abs(curr_x - corner_x) + abs(curr_y - corner_y) for corner_x, corner_y in remaning_corners])
     return total_cost # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
