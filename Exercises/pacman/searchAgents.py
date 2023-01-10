@@ -473,7 +473,29 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    pos_x, pos_y = position
+    # simple sum of manhattan distance - 7741 nodes
+    # total_cost = sum([ abs(pos_x - food_x) + abs(pos_y - food_y) for food_x, food_y in foodGrid.asList()])
+    # find nearest food
+    total_cost = 0
+    remaining_food = set(foodGrid.asList())
+
+    while len(remaining_food) > 0:
+        # using nearest food with manhattan distance - 7042
+        food_distance = [
+            ((food_x, food_y), abs(pos_x - food_x) + abs(pos_y - food_y)) for food_x, food_y in remaining_food
+        ]
+        # use nearest food with mazeDistance - 5972 node, but obviously this is much slower since it is no longer a heursitic function
+        # gameState = problem.startingGameState
+        # food_distance = [
+        #     ((food_x, food_y), mazeDistance((pos_x, pos_y), (food_x, food_y), gameState)) for food_x, food_y in remaining_food
+        # ]
+        nearest_food = min(food_distance, key=lambda x: x[1])
+        remaining_food.remove(nearest_food[0])
+        pos_x, pos_y = nearest_food[0]
+        total_cost += nearest_food[1]
+
+    return total_cost
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
