@@ -335,7 +335,7 @@ class CornersProblem(search.SearchProblem):
                 if pos in self.corners and pos not in visited_corners:
                     new_visited = list(visited_corners)
                     new_visited.append(pos)
-                    visited_corners = tuple(new_visited)
+                    visited_corners = tuple(sorted(new_visited))
                 nextState = (pos, visited_corners)
                 cost = 1
                 successors.append( ( nextState, action, cost) )
@@ -370,11 +370,25 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
+    import math
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    remaning_corners = set(corners) - set(state[1])
+    curr_x, curr_y = state[0]
+    # total_cost = 0
+    # while len(remaning_corners) > 0:
+    #     distance = [ ((corner_x, corner_y),  abs(curr_x - corner_x) + abs(curr_y - corner_y))
+    #                  for corner_x, corner_y in remaning_corners ]
+    #     # distance = [ ((corner_x, corner_y),  mazeDistance((corner_x, corner_y), (curr_x, curr_y)))
+    #     #              for corner_x, corner_y in remaning_corners ]
+    #     further_corner = max(distance, key=lambda x: x[1])
+    #     total_cost = further_corner[1]
+    #     curr_x, curr_y = further_corner[0]
+    #     remaning_corners.remove(further_corner[0])
+
+    total_cost = sum([abs(curr_x - corner_x) + abs(curr_y - corner_y) for corner_x, corner_y in remaning_corners])
+    return total_cost # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
