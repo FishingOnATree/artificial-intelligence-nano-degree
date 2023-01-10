@@ -368,6 +368,7 @@ def cornersHeuristic(state, problem):
     remaning_corners = set(corners) - set(state[1])
     curr_x, curr_y = state[0]
     total_cost = 0
+    # manhattan distance to furtherest unvisited corner until all is visited - 822 nodes.
     while len(remaning_corners) > 0:
         distance = [ ((corner_x, corner_y),  abs(curr_x - corner_x) + abs(curr_y - corner_y))
                      for corner_x, corner_y in remaning_corners ]
@@ -376,6 +377,7 @@ def cornersHeuristic(state, problem):
         curr_x, curr_y = furtherest_corner[0]
         remaning_corners.remove(furtherest_corner[0])
 
+    # sum of remaining corners is pretty good heuristic (931)
     # total_cost = sum([abs(curr_x - corner_x) + abs(curr_y - corner_y) for corner_x, corner_y in remaning_corners])
     return total_cost # Default to trivial solution
 
