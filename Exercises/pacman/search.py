@@ -173,29 +173,22 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     from util import PriorityQueue
     unvisited_queue = PriorityQueue()
-    unvisited_queue.push(problem.getStartState(), 0)
-    paths = dict()
-    costs = dict()
+    unvisited_queue.push((problem.getStartState(), [], 0), 0)
     explored = set()
     while not unvisited_queue.isEmpty():
-        curr_state = unvisited_queue.pop()
-        explored.add(curr_state)
-        path = paths.get(curr_state, [])
-        cost_from_root = costs.get(curr_state, 0)
+        curr_state, path, cost_from_root = unvisited_queue.pop()
         if problem.isGoalState(curr_state):
             return path
         else:
-            successors = problem.getSuccessors(curr_state)
-            if successors:
-                for next_state, direction, _ in successors:
+            if curr_state not in explored:
+                explored.add(curr_state)
+                for next_state, direction, step_cost in problem.getSuccessors(curr_state):
                     if next_state not in explored:
                         estimated_cost = heuristic(curr_state, problem)
                         new_path = list(path)
                         new_path.append(direction)
-                        new_cost = cost_from_root + estimated_cost
-                        paths[next_state] = new_path
-                        costs[next_state] = new_cost
-                        unvisited_queue.push(next_state, new_cost)
+                        new_cost = cost_from_root + step_cost + estimated_cost
+                        unvisited_queue.push((next_state, new_path, new_cost), new_cost)
 
 
 # Abbreviations
