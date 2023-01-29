@@ -35,7 +35,13 @@ class ActionLayer(BaseActionLayer):
         layers.ActionNode
         """
         # TODO: implement this function
-        raise NotImplementedError
+        def check_inference(effects, preconditions):
+            for literal in effects:
+                if ~literal in preconditions:
+                    return True
+            return False
+
+        return check_inference(self.children[actionA], self.parents[actionB]) or check_inference(self.children[actionB], self.parents[actionA])
 
     def _competing_needs(self, actionA, actionB):
         """ Return True if any preconditions of the two actions are pairwise mutex in the parent layer
@@ -71,8 +77,7 @@ class LiteralLayer(BaseLiteralLayer):
 
     def _negation(self, literalA, literalB):
         """ Return True if two literals are negations of each other """
-        # TODO: implement this function
-        raise NotImplementedError
+        return literalA == ~literalB
 
 
 class PlanningGraph:
