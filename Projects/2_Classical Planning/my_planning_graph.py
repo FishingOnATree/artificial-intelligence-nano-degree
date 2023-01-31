@@ -20,7 +20,7 @@ class ActionLayer(BaseActionLayer):
         layers.ActionNode
         """
         # TODO: implement this function
-        raise NotImplementedError
+        return self.children[actionA].intersection({~effect for effect in self.children[actionB]})
 
 
     def _interference(self, actionA, actionB):
@@ -56,7 +56,11 @@ class ActionLayer(BaseActionLayer):
         layers.BaseLayer.parent_layer
         """
         # TODO: implement this function
-        raise NotImplementedError
+        for literalA in self.parents[actionA]:
+            for literalB in self.parents[actionB]:
+                if self.parent_layer.is_mutex(literalA, literalB):
+                    return True
+        return False
 
 
 class LiteralLayer(BaseLiteralLayer):
@@ -73,7 +77,11 @@ class LiteralLayer(BaseLiteralLayer):
         layers.BaseLayer.parent_layer
         """
         # TODO: implement this function
-        raise NotImplementedError
+        for actionA in self.parents[literalA]:
+            for actionB in self.parents[literalB]:
+                if self.parent_layer.is_mutex(actionA, actionB):
+                    return True
+        return False
 
     def _negation(self, literalA, literalB):
         """ Return True if two literals are negations of each other """
